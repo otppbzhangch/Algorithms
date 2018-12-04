@@ -1,0 +1,26 @@
+1. Given integer array in increasing order. Print any pair with sum equal to a given target
+
+List<int> numbers = new List<int> { 1, 4, 11, 13, 15 };
+int targetSum = 15;
+int head = 0;
+int tail = numbers.Count-1;
+int currSum = 0;
+while (tail > head)
+{
+    currSum = numbers[head] + numbers[tail];
+    if (currSum == targetSum)
+    {
+        Console.Out.WriteLine(numbers[head] + " " + numbers[tail]);
+        break;
+    }
+    else if (currSum < targetSum)
+    {
+        head++;
+    }
+    else
+    {
+        tail--;
+    }
+}
+Console.ReadKey();
+=================================================
