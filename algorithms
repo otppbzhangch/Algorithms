@@ -24,3 +24,21 @@ while (tail > head)
 }
 Console.ReadKey();
 =================================================
+2. Reverse string
+
+String word = "ABCDE";
+
+char[] letters = word.ToCharArray();
+int head = 0;
+int tail = letters.Length - 1;
+
+while (head < tail)
+{
+    char temp = letters[head];
+    letters[head] = letters[tail];
+    letters[tail] = temp;
+    head++;
+    tail--;
+}
+
+Console.Out.WriteLine(word + "=>" + String.Join("", letters));
