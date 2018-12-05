@@ -42,3 +42,36 @@ while (head < tail)
 }
 
 Console.Out.WriteLine(word + "=>" + String.Join("", letters));
+==================================
+3. Given matrix of int - row in ascending order and col in assending order. Find location of a number
+
+/**** Example *****/
+private static int N = 4;
+private static int target = 5;
+private static int[,] numbers =
+    {
+        { 1,2,8,9 },
+        { 2,4,9,12 },
+        { 4,7,10,13},
+        { 6,8,11,15}
+    };
+/***************/
+private static Tuple<int,int> find(int x, int y)
+{
+    if (x == N || y < 0)
+        return null;
+    if (numbers[x, y] == target)
+        return new Tuple<int, int>(x, y);
+    if (numbers[x, y] > target)
+        return find(x, y - 1);
+    if (numbers[x, y] < target)
+        return find(x + 1, y);
+    return null;
+}
+
+static void Main(string[] args)
+{
+    var result = find(0, N-1);
+    Console.Out.WriteLine(result == null ? "not found" : result.Item1 + "," + result.Item2);
+    Console.ReadKey();
+}
