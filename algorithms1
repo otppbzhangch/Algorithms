@@ -1,0 +1,39 @@
+1. Check whether a string can be written as repeated substring
+
+using System;
+using System.Collections.Generic;
+					
+public class Program
+{
+	private static String input = "abab";
+	private static List<Char> substring = new List<Char>();
+	private static String result = "true";
+	
+	public static void Main()
+	{
+		if(String.IsNullOrEmpty(input))
+		   result = "false";
+		substring.Add(input[0]);
+		int i=1;
+		while(i<input.Length && input[i]!=substring[0])
+			substring.Add(input[i++]);
+	
+		int length = substring.Count;
+		if (input.Length%length != 0)
+			result = "false";
+		else
+		{
+			String target = String.Join("",substring);
+			int j = (int)input.Length/length;
+			for(int k=1; k<j; k++)
+			{
+				Console.WriteLine(string.Format("checking {0} to {1}", input.Substring(k*length,length), target));
+				if(!input.Substring(k*length,length).Equals(target))
+				{
+					result = "false";break;
+				}
+			}
+		}
+		Console.WriteLine(result);
+	}
+}
