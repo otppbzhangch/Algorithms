@@ -1,0 +1,43 @@
+1. Minimum arrows required to shoot balloons
+https://www.lintcode.com/problem/minimum-number-of-arrows-to-burst-balloons/
+
+    class Program
+    {
+
+        private static List<Tuple<int, int>> coords = new List<Tuple<int, int>>()
+        {
+            new Tuple<int, int>(10,16),
+            new Tuple<int, int>(2,8),
+            new Tuple<int, int>(1,6),
+            new Tuple<int, int>(7,12)
+
+        };
+
+        private static List<int> arrows = new List<int>();
+
+        private static bool crossed(Tuple<int,int> coord)
+        {
+            foreach (var a in arrows)
+                if (coord.Item1 <= a && a <= coord.Item2)
+                    return true;
+            return false;
+        }
+
+        static void Main(string[] args)
+        {
+            coords = coords.OrderBy(t => t.Item2).ToList();
+            arrows.Add(coords[0].Item2);
+
+            foreach(var c in coords)
+            {
+                if (!crossed(c))
+                    arrows.Add(c.Item2);
+            }
+
+            Console.WriteLine(string.Join(",", arrows));
+
+            Console.ReadKey();
+
+        }
+        
+    }
