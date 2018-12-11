@@ -41,3 +41,30 @@ https://www.lintcode.com/problem/minimum-number-of-arrows-to-burst-balloons/
         }
         
     }
+
+2. Distribute cookies to children
+https://www.jiuzhang.com/article/CN9Ope/
+
+class Program
+    {
+
+        private static List<int> children = new List<int>(){1, 2, 3};
+        private static List<int> cookies = new List<int>() { 1, 2 };
+
+        static void Main(string[] args)
+        {
+            var sortedi = children.OrderBy(t => t).ToList();
+            var sortedj = cookies.OrderBy(t => t).ToList();
+
+            int i, j;
+            for (i = j = 0; i < sortedi.Count && j < sortedj.Count; j++)
+                if (sortedi[i] <= sortedj[j])
+                    i++;
+
+            Console.WriteLine("Num happy children: " + i);
+
+            Console.ReadKey();
+
+        }
+        
+    }
