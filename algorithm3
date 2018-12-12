@@ -1,0 +1,37 @@
+3. Find combination of numbers summing to a given number
+
+class Program
+    {
+        private static List<int> inputs = new List<int> { 2, 4, 6, 8 };
+        private static List<List<int>> answers = new List<List<int>>();
+        private static int target = 8;
+
+        private static void findCombination(List<int> numbers, int sum)
+        {
+            if (sum < 0)
+                return;
+
+            if (sum == 0)
+            {
+                List<int> combination = new List<int>(numbers);
+                answers.Add(combination);
+                return;
+            }
+
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                numbers.Add(inputs[i]);
+                findCombination(numbers, sum - inputs[i]);
+                numbers.RemoveAt(numbers.Count - 1);
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            findCombination(new List<int>(), target);
+            StringBuilder sb = new StringBuilder();
+            answers.ForEach(a=>sb.Append($"({String.Join(",", a)})"));
+            Console.WriteLine(sb.ToString());
+            Console.ReadKey();
+        }
+    }
