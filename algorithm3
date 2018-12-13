@@ -35,3 +35,46 @@ class Program
             Console.ReadKey();
         }
     }
+
+4. Pattern matching
+https://www.geeksforgeeks.org/match-a-pattern-and-string-without-using-regular-expressions/
+
+class Program
+    {
+        private static String input = "GraTreGra";
+        private static String pattern = "aba";
+        private static Dictionary<char, string> map = new Dictionary<char, string>();
+
+        private static bool matched(int currInputIndex, int currPatternIndex)
+        {
+            if (currInputIndex==input.Length && currPatternIndex == pattern.Length)
+                return true;
+            if (currInputIndex == input.Length || currPatternIndex == pattern.Length)
+                return false;
+
+            if (map.ContainsKey(pattern[currPatternIndex]))
+            {
+                string currPattern = map[pattern[currPatternIndex]];
+                if (currInputIndex + currPattern.Length > input.Length || !input.Substring(currInputIndex, currPattern.Length).Equals(currPattern))
+                    return false;
+                return matched(currInputIndex + currPattern.Length, currPatternIndex + 1);
+            }
+
+            for (int i = 1; i < input.Length - currInputIndex; i++)
+            {
+                map[pattern[currPatternIndex]] = input.Substring(currInputIndex, i);
+                if (matched(currInputIndex + i, currPatternIndex + 1))
+                    return true;
+                map.Remove(pattern[currPatternIndex]);
+            }
+            return false;
+        }
+
+        static void Main(string[] args)
+        {
+            if (matched(0, 0))
+                foreach(KeyValuePair<char, string> kv in map)
+                    Console.WriteLine($"{kv.Key}:{kv.Value}");
+            Console.ReadKey();
+        }
+    }
