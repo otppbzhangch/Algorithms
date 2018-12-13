@@ -1,0 +1,45 @@
+1. Minimize unique char in A
+https://www.geeksforgeeks.org/minimize-number-unique-characters-string/
+
+    class Program
+    {
+        //private static char[] A = { 'a', 'b', 'a', 'b', 'a' };
+        //private static char[] B = { 'b', 'a', 'b', 'a', 'b' };
+        private static char[] A = { 'a', 'a', 'a', 'a', 'a' };
+        private static char[] B = { 'b', 'b', 'a', 'b', 'b' };
+        private static Dictionary<char, int> count = new Dictionary<char, int>();
+        private static int minSwap = 15;
+
+        private static void updateCount(char c, int currIdx)
+        {
+            int val;
+            if (count.TryGetValue(c, out val))
+                count[c] = ++val;
+            else
+                count[c] = 1;
+
+            findMinSwap(currIdx + 1);
+
+            if (--count[c] == 0)
+                count.Remove(c);
+        }
+
+        private static void findMinSwap(int currIdx)
+        {
+            if (currIdx == A.Length)
+            {
+                minSwap = Math.Min(minSwap, count.Count);
+                return;
+            }
+
+            updateCount(A[currIdx], currIdx);
+            updateCount(B[currIdx], currIdx);
+        }
+
+        static void Main(string[] args)
+        {
+            findMinSwap(0);
+            Console.WriteLine($"minSwap: {minSwap}");
+            Console.ReadKey();
+        }
+    }
