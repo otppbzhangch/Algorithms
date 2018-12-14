@@ -43,3 +43,47 @@ https://www.geeksforgeeks.org/minimize-number-unique-characters-string/
             Console.ReadKey();
         }
     }
+    
+2. Print lexicographical order of string
+https://www.geeksforgeeks.org/print-all-the-combinations-of-a-string-in-lexicographical-order/
+
+    class Program
+    {
+        private static string input = "ABC";
+        private static List<string> answers = new List<string>();
+        
+        private static void getCombinations(string curr, string str)
+        {
+            if (str.Length < 2)
+            {
+                answers.AddRange(new List<string>() { str });
+                return;
+            }
+
+            if (str.Length == 2)
+            {
+                answers.AddRange(new List<string>()
+                {
+                    curr + str.Substring(0,1),
+                    curr + str.Substring(0,1)+str.Substring(1,1),
+                    curr + str.Substring(1,1),
+                    curr + str.Substring(1,1)+str.Substring(0,1),
+                });
+                return;
+            }
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                string ch = str.Substring(i, 1);
+                str = str.Remove(i, 1);
+                getCombinations(ch, str);
+                str = str.Insert(i, ch);
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            getCombinations("", input);
+            Console.ReadKey();
+        }
+    }
