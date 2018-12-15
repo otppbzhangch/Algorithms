@@ -1,0 +1,84 @@
+1. Find path from corner to center
+https://www.geeksforgeeks.org/find-paths-from-corner-cell-to-middle-cell-in-maze/
+
+    class Program
+    {
+        private static int[,] maze =
+        {
+            { 3, 5, 4, 4, 7, 3, 4, 6, 3 },
+            { 6, 7, 5, 6, 6, 2, 6, 6, 2 },
+            { 3, 3, 4, 3, 2, 5, 4, 7, 2 },
+            { 6, 5, 5, 1, 2, 3, 6, 5, 6 },
+            { 3, 3, 4, 3, 0, 1, 4, 3, 4 },
+            { 3, 5, 4, 3, 2, 2, 3, 3, 5 },
+            { 3, 5, 4, 3, 2, 6, 4, 4, 3 },
+            { 3, 5, 1, 3, 7, 5, 3, 6, 4 },
+            { 6, 2, 4, 3, 4, 5, 4, 5, 1 },
+        };
+        private static Tuple<int, int> start = new Tuple<int, int>(0, 0);
+
+        private static bool[,] visited = new bool[9,9];
+        private static List<List<Tuple<int, int>>> answers = new List<List<Tuple<int, int>>>();
+        private static int[] dx = {-1, 1, 0, 0 };
+        private static int[] dy = {0, 0, -1, 1 };
+
+        private static bool isValid(Tuple<int, int> curr)
+        {
+            return 0 <= curr.Item1 && curr.Item1 <= 8
+                && 0 <= curr.Item2 && curr.Item2 <= 8
+                && !visited[curr.Item1, curr.Item2];
+        }
+        
+        private static void findPaths(List<Tuple<int, int>> paths, Tuple<int, int> curr)
+        {
+            if (curr.Item1 == 4 && curr.Item2 == 4)
+            {
+                answers.Add(new List<Tuple<int, int>>(paths));
+                return;
+            }
+
+            int nextR, nextC, n;
+            for (int i = 0; i < 4; i++)
+            {
+                n = maze[curr.Item1, curr.Item2];
+                nextR = curr.Item1 + dx[i] * n;
+                nextC = curr.Item2 + dy[i] * n;
+
+                Tuple<int, int> next = new Tuple<int, int>(nextR, nextC);
+
+                if (isValid(next))
+                {
+                    visited[nextR, nextC] = true;
+                    paths.Add(new Tuple<int, int>(nextR, nextC));
+                    findPaths(paths, next);
+                    paths.Remove(next);
+                    visited[nextR, nextC] = false;
+                }
+            }
+
+        }
+
+        private static void printAnswers()
+        {
+            foreach (var a in answers)
+            {
+                Console.WriteLine("path:");
+                a.ForEach(p => Console.Write(string.Format($"({p.Item1},{p.Item2})")));
+                Console.WriteLine();
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            int i, j;
+            for (i = j = 0; i < 9 && j < 9; i++, j++)
+            {
+                visited[i,j] = false;
+            }
+
+            findPaths(new List<Tuple<int, int>>(), start);
+            printAnswers();
+
+            Console.ReadKey();
+        }
+    }
