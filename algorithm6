@@ -1,0 +1,68 @@
+1. Find if there's a path from source with distance > k
+
+https://www.geeksforgeeks.org/find-if-there-is-a-path-of-more-than-k-length-from-a-source/
+    class Program
+    {
+        private static int N = 9;
+        private static int[,] graph =
+        {
+            { 0, 4, 0, 0, 0, 0, 0, 8, 0 },
+            { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
+            { 0, 8, 0, 7, 0, 4, 0, 0, 2 },
+            { 0, 0, 7, 0, 9, 14, 0, 0, 0 },
+            { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
+            { 0, 0, 4, 14, 10, 0, 2, 0, 0 },
+            { 0, 0, 0, 0, 0, 2, 0, 1, 6 },
+            { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
+            { 0, 0, 2, 0, 0, 0, 6, 7, 0 },
+        };
+        private static int s = 0;
+        private static int k = 58;
+
+        private static bool[] visited = new bool[N];
+        private static List<int> path = new List<int>();
+        private static bool done = false;
+
+        private static void findPath(int v, int dist)
+        {
+            if (dist >= k)
+            {
+                path.Add(v);
+                Console.WriteLine(string.Join("->", path));
+                done = true;
+                return;
+            }
+            
+            for (int i = 0; i < N; i++)
+            {
+                if (done) return;
+
+                visited[v] = true;
+                path.Add(v);
+                dist += graph[v, i];
+
+                if (!visited[i] && graph[v,i] > 0)
+                {
+                    findPath(i, dist);
+                }
+                path.Remove(v);
+                visited[v] = false;
+                dist -= graph[v, i];
+
+            }
+
+        }
+
+        static void Main(string[] args)
+        {
+            for (int i = 0; i < N; i++)
+                    visited[i] = false;
+
+            visited[s] = true;
+            findPath(s, 0);
+
+            if (!done)
+                Console.WriteLine("No solution");
+            Console.ReadKey();
+        }
+    }
