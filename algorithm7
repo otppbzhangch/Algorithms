@@ -1,0 +1,42 @@
+1.
+https://www.geeksforgeeks.org/check-if-n-can-be-represented-as-sum-of-integers-chosen-from-set-a-b/
+
+    class Program
+    {
+        private static int N = 8;
+        private static int A = 3;
+        private static int B = 7;
+        
+        private static bool isPossible(int targetSum)
+        {
+            if (targetSum < Math.Min(A, B))
+                return false;
+
+            if (targetSum == A || targetSum == B || targetSum == (A + B))
+                return true;
+            
+            for (int i = 1; i <= targetSum / A; i++)
+            {
+                if (isPossible(targetSum - A * i))
+                    return true;
+            }
+
+            for (int i = 1; i <= targetSum / B; i++)
+            {
+                if (isPossible(targetSum - B * i))
+                    return true;
+            }
+
+            return false;
+        }
+
+        static void Main(string[] args)
+        {
+            bool possible = isPossible(N);
+            if (possible)
+                Console.WriteLine("YES");
+            else
+                Console.WriteLine("NO");
+            Console.ReadKey();
+        }
+    }
