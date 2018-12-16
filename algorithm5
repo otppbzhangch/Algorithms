@@ -70,14 +70,131 @@ https://www.geeksforgeeks.org/find-paths-from-corner-cell-to-middle-cell-in-maze
 
         static void Main(string[] args)
         {
-            int i, j;
-            for (i = j = 0; i < 9 && j < 9; i++, j++)
-            {
-                visited[i,j] = false;
-            }
+            for (int i = 0; i < 9; i++)
+                for (int j = 0; j < 9; j++)
+                    visited[i,j] = false;
 
             findPaths(new List<Tuple<int, int>>(), start);
             printAnswers();
+
+            Console.ReadKey();
+        }
+    }
+
+
+2. Shortest path to avoid landmines
+https://www.geeksforgeeks.org/find-shortest-safe-route-in-a-path-with-landmines/
+
+    class Program
+    {
+        private static int M = 12;
+        private static int N = 10;
+
+        private static int[,] land =
+        {
+            { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
+            { 1,  0,  1,  1,  1,  1,  1,  1,  1,  1 },
+            { 1,  1,  1,  0,  1,  1,  1,  1,  1,  1 },
+            { 1,  1,  1,  1,  0,  1,  1,  1,  1,  1 },
+            { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
+            { 1,  1,  1,  1,  1,  0,  1,  1,  1,  1 },
+            { 1,  0,  1,  1,  1,  1,  1,  1,  0,  1 },
+            { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
+            { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
+            { 0,  1,  1,  1,  1,  0,  1,  1,  1,  1 },
+            { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
+            { 1,  1,  1,  0,  1,  1,  1,  1,  1,  1 },
+        };
+        
+        private static bool[,] visited = new bool[M, N];
+        private static List<Tuple<int, int>> minPath = new List<Tuple<int, int>>();
+        private static int minMove = M*N;
+        private static int[] dx = {-1, 1, 0, 0 };
+        private static int[] dy = {0, 0, -1, 1 };
+
+        private static bool isValid(int row, int col)
+        {
+            return 0 <= row && row < M
+                && 0 <= col && col < N
+                && land[row, col] == 1
+                && !visited[row, col];
+        }
+
+        private static void init()
+        {
+            int i, j;
+            for (i = 0; i < M; i++)
+                for (j = 0; j < N; j++)
+                    visited[i, j] = false;
+
+            for (i = 0; i < M; i++)
+                for (j = 0; j < N; j++)
+                    if (land[i, j] == 0)
+                        for (int k = 0; k < 4; k++)
+                            if (isValid(i + dx[k], j + dy[k]))
+                                land[i + dx[k], j + dy[k]] = -1;
+        }
+
+        private static void printLand()
+        {
+            int i, j;
+            for (i = 0; i < M; i++)
+            {
+                Console.WriteLine();
+                for (j = 0; j < N; j++)
+                    Console.Write(land[i, j] + " ");
+            }
+        }
+
+        private static void findPaths(List<Tuple<int, int>> currPath, int row, int col)
+        {
+            if (col == N-1)
+            {
+                if (currPath.Count < minMove)
+                {
+                    minPath.Clear();
+                    currPath.ForEach(c => minPath.Add(new Tuple<int, int>(c.Item1, c.Item2)));
+                    minMove = minPath.Count;
+                }
+                return;
+            }
+
+            int nextR, nextC;
+
+            for (int i = 0; i < 4; i++)
+            {
+                visited[row, col] = true;
+                currPath.Add(new Tuple<int, int>(row, col));
+
+                nextR = row + dx[i];
+                nextC = col + dy[i];
+
+                if (isValid(nextR, nextC))
+                {
+                    Console.WriteLine(nextR + ", " + nextC);
+                    findPaths(currPath, nextR, nextC);
+                }
+                currPath.Remove(new Tuple<int, int>(row, col));
+                visited[row, col] = false;
+
+            }
+
+        }
+
+        private static void printPath()
+        {
+            Console.WriteLine("min num moves: " + (minPath.Count > 0? minMove.ToString() : "non-exist"));
+            minPath.ForEach(p => Console.Write(string.Format($"({p.Item1},{p.Item2})")));
+        }
+
+        static void Main(string[] args)
+        {
+            init();
+            printLand();
+            for (int i = 0; i < M; i++)
+                if (isValid(i, 0))
+                    findPaths(new List<Tuple<int, int>>(), i, 0);
+            printPath();
 
             Console.ReadKey();
         }
