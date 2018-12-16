@@ -1,7 +1,7 @@
 1. Find path from corner to center
 https://www.geeksforgeeks.org/find-paths-from-corner-cell-to-middle-cell-in-maze/
 
-    class Program
+       class Program
     {
         private static int[,] maze =
         {
@@ -17,10 +17,10 @@ https://www.geeksforgeeks.org/find-paths-from-corner-cell-to-middle-cell-in-maze
         };
         private static Tuple<int, int> start = new Tuple<int, int>(0, 0);
 
-        private static bool[,] visited = new bool[9,9];
+        private static bool[,] visited = new bool[9, 9];
         private static List<List<Tuple<int, int>>> answers = new List<List<Tuple<int, int>>>();
-        private static int[] dx = {-1, 1, 0, 0 };
-        private static int[] dy = {0, 0, -1, 1 };
+        private static int[] dx = { -1, 1, 0, 0 };
+        private static int[] dy = { 0, 0, -1, 1 };
 
         private static bool isValid(Tuple<int, int> curr)
         {
@@ -28,7 +28,7 @@ https://www.geeksforgeeks.org/find-paths-from-corner-cell-to-middle-cell-in-maze
                 && 0 <= curr.Item2 && curr.Item2 <= 8
                 && !visited[curr.Item1, curr.Item2];
         }
-        
+
         private static void findPaths(List<Tuple<int, int>> paths, Tuple<int, int> curr)
         {
             if (curr.Item1 == 4 && curr.Item2 == 4)
@@ -36,10 +36,13 @@ https://www.geeksforgeeks.org/find-paths-from-corner-cell-to-middle-cell-in-maze
                 answers.Add(new List<Tuple<int, int>>(paths));
                 return;
             }
-
+            
             int nextR, nextC, n;
             for (int i = 0; i < 4; i++)
             {
+                visited[curr.Item1, curr.Item2] = true;
+                paths.Add(new Tuple<int, int>(curr.Item1, curr.Item2));
+
                 n = maze[curr.Item1, curr.Item2];
                 nextR = curr.Item1 + dx[i] * n;
                 nextC = curr.Item2 + dy[i] * n;
@@ -48,12 +51,10 @@ https://www.geeksforgeeks.org/find-paths-from-corner-cell-to-middle-cell-in-maze
 
                 if (isValid(next))
                 {
-                    visited[nextR, nextC] = true;
-                    paths.Add(new Tuple<int, int>(nextR, nextC));
                     findPaths(paths, next);
-                    paths.Remove(next);
-                    visited[nextR, nextC] = false;
-                }
+               }
+                paths.Remove(new Tuple<int, int>(curr.Item1, curr.Item2));
+                visited[curr.Item1, curr.Item2] = false;
             }
 
         }
@@ -70,9 +71,10 @@ https://www.geeksforgeeks.org/find-paths-from-corner-cell-to-middle-cell-in-maze
 
         static void Main(string[] args)
         {
-            for (int i = 0; i < 9; i++)
-                for (int j = 0; j < 9; j++)
-                    visited[i,j] = false;
+            int i, j;
+            for (i = 0; i < 9; i++)
+                for (j = 0; j < 9; j++)
+                    visited[i, j] = false;
 
             findPaths(new List<Tuple<int, int>>(), start);
             printAnswers();
