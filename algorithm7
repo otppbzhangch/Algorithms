@@ -40,3 +40,59 @@ https://www.geeksforgeeks.org/check-if-n-can-be-represented-as-sum-of-integers-c
             Console.ReadKey();
         }
     }
+
+2.
+https://www.geeksforgeeks.org/minimum-difference-between-the-highest-and-the-smallest-value-of-mines-distributed/
+
+    class Program
+    {
+        private static int N = 2;
+        private static int M = 4;
+        private static List<int> valueOfMines = new List<int>{ 6, 10, 13, 2 };
+
+        private static List<List<int>> minAssignment = new List<List<int>>();
+        private static int minDiff = int.MaxValue;
+        
+        private static int getMinDiff(List<List<int>> assignment)
+        {
+            var sums = assignment.Select(a => a.Sum());
+            return sums.Max() - sums.Min();
+        }
+
+        private static void updateAssignment(List<List<int>> assignment, int n, List<int> mines)
+        {
+            if (mines.Count < n) return;
+
+            if (n == 1)
+            {
+                assignment.Add(new List<int>(mines));
+                int newDiff = getMinDiff(assignment);
+                if (newDiff < minDiff)
+                {
+                    minAssignment = new List<List<int>>();
+                    assignment.ForEach(a => minAssignment.Add(a));
+                    minDiff = newDiff;
+                    assignment.Clear();
+                }
+                return;
+            }
+            
+            for (int i = 1; i <= mines.Count - n + 1; i++)
+            {
+                List<int> range = new List<int>(mines.GetRange(0, i));
+                assignment.Add(new List<int>(range));
+                range.ForEach(r=>mines.Remove(r));
+
+                updateAssignment(assignment, n - 1, mines);
+
+                assignment.Remove(new List<int>(range));
+                mines.InsertRange(0, range);
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            updateAssignment(new List<List<int>>(), N, valueOfMines);
+            Console.ReadKey();
+        }
+    }
